@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
+  "fmt": {
+    "options": {
+      "indentWidth": 2,
+      "lineWidth": 120,
+      "singleQuote": true,
+      "useTabs": false
+    }
+  },
+  "importMap": "./import_map.json",
+  "test": {
+    "files": {
+      "include": ["tests/"]
+    }
+  },
+  "tasks": {
+    "build:lib": "deno bundle www/live-reload/mod.ts public/live-reload.js"
+  }
+}
