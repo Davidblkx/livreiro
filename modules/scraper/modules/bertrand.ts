@@ -18,9 +18,9 @@ export const BertrandScraper = buildScrapItHandler<SearchResult, SearchQuery>({
         convert: (href) => `https://www.bertrand.pt${href}`,
       },
       img: {
-        selector: '.product-img .cover .track picture source',
+        selector: '.product-img .cover .track picture img',
         eq: 0,
-        attr: 'srcset',
+        attr: 'src',
       },
     },
   },

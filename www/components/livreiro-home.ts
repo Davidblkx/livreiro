@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import './header.ts';
 import './search.ts';
+import './book-list.ts';
 
 export const LivreiroHomeName = 'lv-home';
 
@@ -41,7 +42,39 @@ export class LivreiroHome extends LitElement {
 
   .content {
     grid-area: content;
+    max-width: 100%;
+    overflow-y: auto;
+    scrollbar-color: var(--color-accent) var(--color-background);
+    padding: 5px;
   }
+
+  ::-webkit-scrollbar {
+    color: red;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-button {
+    background-color: var(--color-background);
+  }
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-background);
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background-color: var(--color-background);
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: var(--color-background);
+  }
+  ::-webkit-resizer {
+    background-color: var(--color-background);
+  }
+
 
   .footer {
     grid-area: footer;
@@ -54,7 +87,9 @@ export class LivreiroHome extends LitElement {
       <div class="top-bar"></div>
       <lv-header class="header"></lv-header>
       <lv-search class="search-bar"></lv-search>
-      <div class="content"></div>
+      <div class="content">
+        <lv-book-list></lv-book-list>
+      </div>
       <div class="footer"></div>
     </div>
     `;

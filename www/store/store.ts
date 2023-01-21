@@ -21,11 +21,8 @@ export class Store<T extends JSONObject> {
     return this.#proxy;
   }
 
-  listen(key: keyof T): Observable<T[keyof T]> {
-    if (!this.#listners.has(key)) {
-      this.#listners.set(key, new Subject<T[keyof T]>());
-    }
-    return this.#listners.get(key)!;
+  listen<K extends keyof T>(key: K): Observable<T[K]> {
+    return this.#getObserver(key);
   }
 
   onKeyChange(): Observable<keyof T> {
@@ -46,6 +43,14 @@ export class Store<T extends JSONObject> {
     this.#keyChange.next(key);
     this.#listners.get(key)?.next(value);
     return true;
+  }
+
+  #getObserver<K extends keyof T>(key: K): Subject<T[K]> {
+    if (!this.#listners.has(key)) {
+      this.#listners.set(key, new Subject<T[keyof T]>());
+    }
+
+    return this.#listners.get(key)! as unknown as Subject<T[K]>;
   }
 
   #createProxy(data: T): T {
