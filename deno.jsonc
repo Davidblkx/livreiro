@@ -23,6 +23,7 @@
     }
   },
   "tasks": {
-    "build:lib": "deno bundle www/live-reload/mod.ts public/live-reload.js"
+    "build:lib": "deno bundle www/live-reload/mod.ts public/live-reload.js",
+    "dev": "deno run -A --watch ./dev.ts"
   }
 }

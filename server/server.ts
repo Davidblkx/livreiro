@@ -131,7 +131,6 @@ export class DinovelServer implements DevServer {
 
       const ws = ctx.upgrade();
       ws.onclose = () => {
-        console.log('Websocket closed');
         this.#reloadSockets = this.#reloadSockets.filter((s) => s !== ws);
       };
 

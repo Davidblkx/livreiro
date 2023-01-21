@@ -1,6 +1,8 @@
 {
   "imports": {
     "deno/": "https://deno.land/std@0.173.0/",
-    "rxjs": "https://esm.sh/rxjs@7.5.7"
+    "rxjs": "https://esm.sh/rxjs@7.5.7",
+    "lit": "https://esm.sh/lit@2.6.1",
+    "lit/": "https://esm.sh/lit@2.6.1/"
   }
 }

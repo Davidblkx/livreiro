@@ -33,6 +33,7 @@ export function buildTemplate(opt: AppConfig): string {
   <head>
     <meta charset="utf-8">
     <title>${opt.title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
     ${opt.watch ? getLiveReloadScript(reloadOptions) : ''}
