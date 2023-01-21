@@ -7,6 +7,7 @@ export type Book = {
   pub: string;
   url: string;
   img: string;
+  source: string;
 };
 
 export interface SearchResult {

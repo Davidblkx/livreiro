@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Book } from '../../modules/search.ts';
+import { BookDetails } from '../actions/group-books.ts';
 
 const ELEMENT_NAME = 'lv-book';
 
@@ -43,6 +43,27 @@ export class BookComponent extends LitElement {
       margin-bottom: 3px;
     }
 
+    .book__prices {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .book__price {
+      text-decoration: none;
+      color: var(--color-txt);
+      margin-right: 7px;
+      min-width: 140px;
+    }
+
+    .book__price > span {
+      font-size: 1.2em;
+    }
+
+    .book__price:hover {
+      color: var(--color-accent);
+    }
+
     @media only screen and (max-width: 600px) {
       .book {
         min-width: 300px;
@@ -52,19 +73,23 @@ export class BookComponent extends LitElement {
   `;
 
   @property({ type: Object })
-  book: Book = {
+  book: BookDetails = {
     title: '',
     author: '',
     img: '',
-    price: '',
     pub: '',
-    url: '',
+    prices: [],
   };
 
   render() {
-    if (!this.book?.url) return html`<div class="book empty"></div>`;
+    if (!this.book?.prices?.length) return html`<div class="book empty"></div>`;
 
-    return html`<a class="book" href="${this.book.url}" target="__blank">
+    const prices = this.book.prices.map((p) =>
+      html`
+    <a href="${p.url}" class="book__price"><span>> ${p.price} - ${p.source}</span></a>`
+    );
+
+    return html`<div class="book">
       <div class="book__img">
         <img src="${this.book.img}" />
       </div>
@@ -72,9 +97,9 @@ export class BookComponent extends LitElement {
         <div class="book__title">${this.book.title}</div>
         <div class="book__author">${this.book.author}</div>
         <div class="book__pub">${this.book.pub}</div>
-        <div class="book__price">${this.book.price}</div>
+        <div class="book__prices">${prices}</div>
       </div>
-    </a>`;
+  </div>`;
   }
 }
 

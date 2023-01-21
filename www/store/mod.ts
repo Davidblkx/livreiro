@@ -11,5 +11,8 @@ export type AppState = {
 export const appStore = new Store<AppState>({
   search: '',
   books: [],
-  scrapers: ['bertrand'],
+  scrapers: ['bertrand', 'wook'],
 });
+
+// TODO: Remove this when the source select is implemented
+appStore.setValue('scrapers', ['bertrand', 'wook']);

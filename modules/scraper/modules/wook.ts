@@ -1,31 +1,35 @@
 import { SearchQuery, SearchResult } from '../../search.ts';
 import { buildScrapItHandler } from '../scrap-it/mod.ts';
 
-export const BertrandScraper = buildScrapItHandler<SearchResult, SearchQuery>({
+export const WookScraper = buildScrapItHandler<SearchResult, SearchQuery>({
   books: {
-    listItem: '.product-portlet',
+    listItem: '.product',
     data: {
       title: '.title a.title-lnk',
       author: {
-        selector: '.authors a',
+        selector: '.autor a',
         eq: 0,
       },
-      price: '.price > .active-price',
+      price: {
+        selector: '.preco',
+        eq: 0,
+      },
       pub: '.publisher',
       url: {
         selector: '.title a.title-lnk',
         attr: 'href',
-        convert: (href) => `https://www.bertrand.pt${href}`,
+        convert: (href) => `https://www.wook.pt${href}`,
       },
       img: {
-        selector: '.product-img .cover .track picture img',
+        selector: '.cover img',
         eq: 0,
         attr: 'src',
+        convert: (src) => src?.replace('/20x', '/170x') ?? '',
       },
       source: {
         selector: '.title a.title-lnk',
-        convert: () => 'Bertrand',
+        convert: () => 'Wook',
       },
     },
   },
-}, (s) => `https://www.bertrand.pt/pesquisa/${encodeURIComponent(s.query)}`);
+}, (s) => `https://www.wook.pt/pesquisa/${encodeURIComponent(s.query)}`);

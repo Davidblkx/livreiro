@@ -172,7 +172,13 @@ export class DinovelServer implements DevServer {
     router.post('/api/search', async (ctx) => {
       const query = await ctx.request.body().value;
       console.log(query);
-      const result = await LivreiroScrapers.bertrand(query);
+
+      const bertrand = await LivreiroScrapers.bertrand(query);
+      const wook = await LivreiroScrapers.wook(query);
+
+      const result: SearchResult = {
+        books: [...bertrand.books, ...wook.books],
+      };
 
       ctx.response.body = result;
       ctx.response.headers.set('Content-Type', 'application/json');

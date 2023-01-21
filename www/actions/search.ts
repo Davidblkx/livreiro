@@ -6,6 +6,7 @@ export async function executeSearch(): Promise<void> {
   const scrapers = appStore.getValue('scrapers');
   if (query.length < 3 || !scrapers.length) return;
 
+  appStore.setValue('books', []);
   const search: SearchQuery = { query, scrapers };
 
   const response = await fetch('/api/search', {
@@ -18,6 +19,4 @@ export async function executeSearch(): Promise<void> {
 
   const result = await response.json() as SearchResult;
   appStore.setValue('books', result.books);
-
-  console.log(result);
 }
