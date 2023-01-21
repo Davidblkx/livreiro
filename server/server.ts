@@ -5,6 +5,8 @@ import { Transpiler, TranspilerWatchResult } from './transpiler/mod.ts';
 import { LIVE_RELOAD_SCRIPT } from './template.ts';
 import { DEFAULT_ENDPOINT } from '../www/live-reload/mod.ts';
 import { parse } from 'deno/path/mod.ts';
+import { LivreiroScrapers } from '../modules/scraper/mod.ts';
+import { SearchQuery, SearchResult } from '../modules/search.ts';
 
 export interface DevServer {
   start(): Promise<number>;
@@ -50,6 +52,7 @@ export class DinovelServer implements DevServer {
     this.#registerTemplateRoute(router);
     this.#registerAbortRoute(router);
     this.#registerLiveReload(router);
+    this.#registerScraper(router);
 
     this.#registerAssets(app);
 
@@ -162,6 +165,17 @@ export class DinovelServer implements DevServer {
 
       ctx.response.body = result;
       ctx.response.headers.set('Content-Type', 'application/javascript');
+    });
+  }
+
+  #registerScraper(router: Router) {
+    router.post('/api/search', async (ctx) => {
+      const query = await ctx.request.body().value;
+      console.log(query);
+      const result = await LivreiroScrapers.bertrand(query);
+
+      ctx.response.body = result;
+      ctx.response.headers.set('Content-Type', 'application/json');
     });
   }
 }
