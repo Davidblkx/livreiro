@@ -32,6 +32,7 @@ export interface TranspileOptions {
 
 export interface FileTranspiler {
   transpile(options: TranspileOptions): Promise<TranspileResult>;
+  kill?(): void;
 }
 
 export interface TranspileWatchOptions {

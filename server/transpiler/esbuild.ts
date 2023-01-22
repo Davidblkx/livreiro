@@ -6,6 +6,7 @@ import {
   initialize as initializeEsBuild,
   OutputFile as ESBuildOutputFile,
   Plugin as ESBuildPlugin,
+  stop as stopEsBuild,
 } from 'https://deno.land/x/esbuild@v0.16.4/mod.js';
 import { parse } from 'deno/path/mod.ts';
 import { FileTranspiler, TranspileOptions, TranspileResult } from './models.ts';
@@ -24,6 +25,10 @@ export class ESBuildTranspiler implements FileTranspiler {
 
   constructor(esBuild?: ESBuild) {
     this.#esBuild = esBuild ?? { build: runESBuild, initialize: initializeEsBuildContext };
+  }
+
+  kill(): void {
+    stopEsBuild();
   }
 
   async transpile(options: TranspileOptions): Promise<TranspileResult> {

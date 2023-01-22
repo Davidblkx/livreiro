@@ -18,3 +18,7 @@ export interface SearchQuery {
   query: string;
   scrapers: (keyof typeof LivreiroScrapers)[];
 }
+
+export interface SearchOptions {
+  scrapers: (keyof typeof LivreiroScrapers)[];
+}

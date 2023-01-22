@@ -1,12 +1,10 @@
-import { Application, Router, send } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
+import { Application, Router } from 'oak';
 import { AppConfig } from './options.ts';
 import { InternalConsole } from './infra/console-handler.ts';
 import { Transpiler, TranspilerWatchResult } from './transpiler/mod.ts';
-import { LIVE_RELOAD_SCRIPT } from './template.ts';
-import { DEFAULT_ENDPOINT } from '../www/live-reload/mod.ts';
 import { parse } from 'deno/path/mod.ts';
-import { LivreiroScrapers } from '../modules/scraper/mod.ts';
-import { SearchQuery, SearchResult } from '../modules/search.ts';
+import { clearReloadSockets, sendReloadEvent } from './routes/livereload.ts';
+import { registerRoutes } from './routes/mod.ts';
 
 export interface DevServer {
   start(): Promise<number>;
@@ -19,7 +17,6 @@ export class DinovelServer implements DevServer {
   #transpiler: Transpiler;
   #controler?: AbortController;
   #watcher?: TranspilerWatchResult;
-  #reloadSockets: WebSocket[] = [];
   #mainScript?: string;
 
   constructor(
@@ -45,22 +42,20 @@ export class DinovelServer implements DevServer {
     const app = new Application();
     const router = new Router();
 
-    this.#console.debug('Compiling...');
-    await this.#registerMainScript(router);
-    this.#console.debug('Compiling Done');
+    if (!this.#config.production) {
+      this.#console.debug('Compiling...');
+      await this.#registerMainScript(router);
+      this.#console.debug('Compiling Done');
+      this.#registerAbortRoute(router);
+    }
 
-    this.#registerTemplateRoute(router);
-    this.#registerAbortRoute(router);
-    this.#registerLiveReload(router);
-    this.#registerScraper(router);
-
-    this.#registerAssets(app);
+    registerRoutes(this.#config, router, app);
 
     app.use(router.routes());
     app.use(router.allowedMethods());
 
     try {
-      console.debug('Server started.');
+      console.debug('Server started at: http://localhost:' + this.#config.port + '/');
       await app.listen({
         port: this.#config.port,
         signal: this.#controler.signal,
@@ -75,69 +70,15 @@ export class DinovelServer implements DevServer {
   }
 
   stop(): void {
-    this.#reloadSockets.forEach((socket) => {
-      try {
-        socket.close();
-      } catch { /* ignore */ }
-    });
+    clearReloadSockets();
     this.#watcher?.stop();
     this.#controler?.abort();
-
-    this.#reloadSockets = [];
-  }
-
-  #registerTemplateRoute(router: Router): void {
-    router.get('/', (ctx) => {
-      ctx.response.body = this.#config.indexTemplate;
-      ctx.response.headers.set('Content-Type', 'text/html');
-    });
-
-    router.get('/index.html', (ctx) => {
-      ctx.response.body = this.#config.indexTemplate;
-      ctx.response.headers.set('Content-Type', 'text/html');
-    });
   }
 
   #registerAbortRoute(router: Router): void {
     router.get('/abort', (ctx) => {
       this.stop();
       ctx.response.body = 'OK';
-    });
-  }
-
-  #registerAssets(app: Application) {
-    app.use(async (ctx, next) => {
-      if (ctx.request.url.pathname.startsWith('/assets/')) {
-        const path = ctx.request.url.pathname.replace('/assets/', '');
-        await send(ctx, path, {
-          root: this.#config.assetsPath,
-        });
-      }
-
-      await next();
-    });
-  }
-
-  #registerLiveReload(router: Router): void {
-    const base = import.meta.url.replace('server.ts', '../public/live-reload.js');
-    const fileContent = Deno.readTextFileSync(new URL(base));
-
-    router.get(LIVE_RELOAD_SCRIPT, (ctx) => {
-      ctx.response.body = fileContent;
-      ctx.response.headers.set('Content-Type', 'application/javascript');
-    });
-
-    router.get(DEFAULT_ENDPOINT, (ctx) => {
-      if (!ctx.isUpgradable) {
-        ctx.throw(501);
-      }
-
-      const ws = ctx.upgrade();
-      ws.onclose = () => {
-        this.#reloadSockets = this.#reloadSockets.filter((s) => s !== ws);
-      };
-
-      this.#reloadSockets.push(ws);
     });
   }
 
@@ -154,9 +95,7 @@ export class DinovelServer implements DevServer {
     this.#watcher.results.subscribe((result) => {
       if (result.success) {
         this.#mainScript = result.output;
-        this.#reloadSockets.forEach((socket) => {
-          socket.send(JSON.stringify({ type: 'reload' }));
-        });
+        sendReloadEvent();
       }
     });
 
@@ -165,23 +104,6 @@ export class DinovelServer implements DevServer {
 
       ctx.response.body = result;
       ctx.response.headers.set('Content-Type', 'application/javascript');
-    });
-  }
-
-  #registerScraper(router: Router) {
-    router.post('/api/search', async (ctx) => {
-      const query = await ctx.request.body().value;
-      console.log(query);
-
-      const bertrand = await LivreiroScrapers.bertrand(query);
-      const wook = await LivreiroScrapers.wook(query);
-
-      const result: SearchResult = {
-        books: [...bertrand.books, ...wook.books],
-      };
-
-      ctx.response.body = result;
-      ctx.response.headers.set('Content-Type', 'application/json');
     });
   }
 }

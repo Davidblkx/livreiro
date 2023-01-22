@@ -1,5 +1,5 @@
 import { ScrapItHandler, ScrapItQuery, ScrapItRequestBuilder } from './models.ts';
-import ScrapItRun from 'https://esm.sh/scrape-it@5.3.2';
+import ScrapItRun from 'https://esm.sh/scrape-it@5.3.2?bundle';
 
 export function buildScrapItHandler<T, R>(
   query: ScrapItQuery<T>,

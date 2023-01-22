@@ -19,7 +19,11 @@ export class Transpiler {
     this.#options = options;
   }
 
-  public async transpile(): Promise<TranspileResult> {
+  public kill(): void {
+    this.#transpiler.kill?.();
+  }
+
+  public async transpile(): Promise<TranspileResult & { output?: string }> {
     try {
       return await this.#transpiler.transpile(this.#options);
     } catch (e) {

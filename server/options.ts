@@ -53,6 +53,15 @@ export interface AppConfig {
    * @default 'debug'
    */
   logLevel: ConsoleLogLevel;
+  /**
+   * Whether to run in production mode
+   * @default false
+   */
+  production: boolean;
+  /**
+   * Version of the build
+   */
+  build: string;
 }
 
 export function buildAppConfig(opt?: Partial<AppConfig>): AppConfig {
@@ -68,6 +77,8 @@ export function buildAppConfig(opt?: Partial<AppConfig>): AppConfig {
     importMapPath: './import_map.json',
     useImportMap: true,
     logLevel: 'debug',
+    production: false,
+    build: 'dev',
     ...opt,
   };
 

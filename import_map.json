@@ -1,8 +1,9 @@
 {
   "imports": {
     "deno/": "https://deno.land/std@0.173.0/",
-    "rxjs": "https://esm.sh/rxjs@7.5.7",
+    "rxjs": "https://esm.sh/rxjs@7.8.0",
     "lit": "https://esm.sh/lit@2.6.1",
-    "lit/": "https://esm.sh/lit@2.6.1/"
+    "lit/": "https://esm.sh/lit@2.6.1/",
+    "oak": "https://deno.land/x/oak@v11.1.0/mod.ts"
   }
 }
