@@ -36,6 +36,8 @@ export class DinovelServer implements DevServer {
       return 5;
     }
 
+    this.#console.debug('Server version: ' + this.#config.build);
+
     this.#controler?.abort();
     this.#controler = new AbortController();
 

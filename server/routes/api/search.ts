@@ -2,12 +2,17 @@ import { API_PREFIX } from './model.ts';
 import { RouteConfig } from '../model.ts';
 import { LivreiroScrapers } from '../../../modules/scraper/mod.ts';
 import { SearchQuery, SearchResult } from '../../../modules/search.ts';
-import { SearchCache } from '../../search-cache.ts';
+import { CacheHandler } from '../../cache/mod.ts';
 
-// 24h
-const cache = new SearchCache(1000 * 60 * 60 * 24);
+let cache: CacheHandler | undefined;
 
-export const registerApiSearchRoute: RouteConfig = (_, router) => {
+export const registerApiSearchRoute: RouteConfig = (config, router) => {
+  cache = CacheHandler.create(config.cache, 60 * 60 * 12); // 12 hours
+
+  if (!cache) {
+    console.warn('Cache is disabled');
+  }
+
   router.post(API_PREFIX + '/search', async (ctx) => {
     const query = await ctx.request.body().value as unknown;
     if (!isSearchQuery(query)) {
@@ -36,7 +41,7 @@ function isSearchQuery(query: unknown): query is SearchQuery {
 
 async function executeSearch(target: keyof typeof LivreiroScrapers, query: SearchQuery): Promise<SearchResult> {
   try {
-    const cacheResult = cache.get(query);
+    const cacheResult = await cache?.get(target, query);
     if (cacheResult) {
       console.log(`using cached result for ${target}`);
       return cacheResult;
@@ -44,7 +49,7 @@ async function executeSearch(target: keyof typeof LivreiroScrapers, query: Searc
 
     console.log(`executing request for ${target}`);
     const result = await LivreiroScrapers[target](query);
-    cache.set(query, result);
+    cache?.set(target, query, result);
     return result;
   } catch (err) {
     console.error(`failed to execute search for ${target}`);

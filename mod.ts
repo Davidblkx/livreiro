@@ -4,8 +4,6 @@ import { Transpiler } from './server/transpiler/mod.ts';
 import { join, toFileUrl } from 'deno/path/mod.ts';
 import { DinovelServer } from './server/server.ts';
 
-const build = Deno.env.get('BUILD') || 'dev';
-
 export async function startProdServer(config: AppConfig): Promise<number> {
   const internalConsole = new ConsoleHandler({
     minLogLevel: config.logLevel,
@@ -31,5 +29,6 @@ await startProdServer(buildAppConfig({
   production: true,
   port: 8080,
   indexTemplate: template,
-  build,
+  build: Deno.env.get('BUILD') || 'dev',
+  cache: Deno.env.get('CACHE') as 'memory' || 'disabled',
 }));

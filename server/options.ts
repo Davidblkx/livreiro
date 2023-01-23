@@ -1,5 +1,6 @@
 import { buildTemplate } from './template.ts';
 import type { ConsoleLogLevel } from './infra/console-handler.ts';
+import type { CacheType } from './cache/mod.ts';
 
 export interface AppConfig {
   /** Title of the site*/
@@ -62,6 +63,12 @@ export interface AppConfig {
    * Version of the build
    */
   build: string;
+
+  /**
+   * Cache type to use
+   * @default 'memory'
+   */
+  cache: CacheType;
 }
 
 export function buildAppConfig(opt?: Partial<AppConfig>): AppConfig {
@@ -79,6 +86,7 @@ export function buildAppConfig(opt?: Partial<AppConfig>): AppConfig {
     logLevel: 'debug',
     production: false,
     build: 'dev',
+    cache: 'memory',
     ...opt,
   };
 

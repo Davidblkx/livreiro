@@ -25,4 +25,5 @@ export async function startDevServer(config: AppConfig): Promise<number> {
 await startDevServer(buildAppConfig({
   entry: './www/mod.ts',
   assetsPath: './public',
+  cache: 'memory',
 }));
