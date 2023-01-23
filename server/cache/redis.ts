@@ -1,4 +1,4 @@
-import { createClient } from 'npm:redis@~4.5.1';
+import { createClient } from 'https://esm.sh/redis@4.5.1';
 import { CacheService } from './model.ts';
 
 export class RedisCache implements CacheService {
