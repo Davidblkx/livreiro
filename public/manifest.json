@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "background_color": "#282a36",
+  "categories": ["books", "shopping", "utilities"],
+  "description": "A simple and fast way to search for books in multiple stores.",
+  "display": "fullscreen",
+  "icons": [{
+    "src": "imgs/livreiro.svg",
+    "sizes": "512x512 384x384 192x192 152x152 144x144 128x128 96x96 72x72 48x48 36x36 32x32 24x24 16x16",
+    "type": "image/svg+xml"
+  }, {
+    "src": "imgs/livreiro.webp",
+    "sizes": "512x512 384x384 192x192 152x152 144x144 128x128 96x96 72x72 48x48 36x36 32x32 24x24 16x16",
+    "type": "image/webp"
+  }, {
+    "src": "imgs/livreiro.png",
+    "sizes": "512x512 384x384 192x192 152x152 144x144 128x128 96x96 72x72 48x48 36x36 32x32 24x24 16x16",
+    "type": "image/png"
+  }],
+  "lang": "pt",
+  "name": "Livreiro",
+  "orientation": "portrait",
+  "scope": "https://livreiro.pt",
+  "start_url": "https://livreiro.pt",
+  "theme_color": "#ff79c6"
+}
