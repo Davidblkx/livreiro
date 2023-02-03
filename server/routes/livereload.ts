@@ -6,7 +6,7 @@ let reloadSockets: WebSocket[] = [];
 
 export const registerLivereloadRoute: RouteConfig = (config, router) => {
   if (config.production) return;
-  const base = import.meta.url.replace('server.ts', '../public/live-reload.js');
+  const base = import.meta.url.replace('routes/livereload.ts', '../public/live-reload.js');
   const fileContent = Deno.readTextFileSync(new URL(base));
 
   router.get(LIVE_RELOAD_SCRIPT, (ctx) => {
