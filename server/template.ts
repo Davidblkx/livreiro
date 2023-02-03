@@ -33,6 +33,9 @@ export function buildTemplate(opt: AppConfig): string {
   <head>
     <meta charset="utf-8">
     <title>${opt.title}</title>
+    <link rel="icon" href="/assets/imgs/livreiro.png" />
+    <link rel='stylesheet' type='text/css' media='screen' href='/assets/styles.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/assets/theme_dark.css'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>

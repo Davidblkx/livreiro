@@ -1,10 +1,13 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { appStore } from '../store/mod.ts';
 import { executeSearch } from '../actions/search.ts';
 
 @customElement('lv-search')
 export class LivreiroSearch extends LitElement {
+  @property()
+  styleClass = 'normal';
+
   @state()
   private __disabled = true;
 
@@ -32,7 +35,7 @@ export class LivreiroSearch extends LitElement {
 
   render() {
     return html`
-      <div class="search">
+      <div class=${'search ' + this.styleClass}>
         <input type="text" placeholder="Título, autor, ISBN..." id="search" @input="${this.__onChange}" />
         <button @click="${this.__onClick}" ?disabled="${this.__disabled}">Pesquisar</button>
       </div>`;
@@ -65,24 +68,36 @@ export class LivreiroSearch extends LitElement {
   padding-right: 10px;
 }
 
+.search.big {
+  flex-direction: column;
+  width: 100%;
+}
+
 .search > input {
   flex: 1 1 auto;
   border: 2px solid var(--color-main);
-  border-radius: 0;
+  border-radius: 10px;
   font-size: 1.1rem;
   background-color: var(--color-main);
   color: var(--color-txt);
   padding: 0;
-  padding-left: 3px;
+  padding-left: 10px;
   margin: 0;
   outline: none;
   height: 100%;
   box-sizing: border-box;
 }
 
+.search.big > input {
+  width: 100%;
+  max-height: 40px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
 .search > input:focus {
-  border: 2px solid var(--color-accent);
-  border-radius: 0;
+  border: 2px solid var(--color-theme);
+  border-radius: 10px;
 }
 
 .search > input::placeholder {
@@ -91,18 +106,23 @@ export class LivreiroSearch extends LitElement {
 }
 
 .search > button {
-  margin-left: 3px;
+  margin-left: 7px;
   flex: 0 1 auto;
   height: 100%;
-  border-radius: 0;
+  border-radius: 5px;
   font-size: 1rem;
   border: none;
+  min-width: 120px;
   background-color: var(--color-main);
   color: var(--color-txt);
 }
 
+.search.big > button {
+  height: 50px;
+}
+
 .search > button:hover {
-  background-color: var(--color-accent);
+  background-color: var(--color-theme);
   color: var(--color-background);
   cursor: pointer;
 }
