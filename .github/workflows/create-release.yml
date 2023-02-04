@@ -37,9 +37,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set version in Dockerfile
-        run: |
-          echo "VERSION=${{ env.VERSION }}"
-          sed -i "s/__BUILD__/${{ env.VERSION }}/" Dockerfile
+        uses: datamonsters/replace-action@v2
+        with:
+          files: 'Dockerfile'
+          replacements: '__BUILD__=${{ env.VERSION }}'
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
