@@ -24,6 +24,8 @@ export async function startProdServer(config: AppConfig): Promise<number> {
 
 const template = await Deno.readTextFile('./public/index.html');
 
+console.log('Starting Dinovel server for build: ', Deno.env.get('BUILD'));
+
 await startProdServer(buildAppConfig({
   assetsPath: './public',
   production: true,
